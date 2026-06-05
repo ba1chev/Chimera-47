@@ -12,7 +12,7 @@ class SupervisedLearningModel(LearningModel):
         super().__init__()
         if classes is None or len(classes) < 2:
             raise ValueError("SupervisedLearningModel requires at least 2 classes.")
-        self._classes: NDArray = np.asarray(classes)
+        self._classes = np.asarray(classes)
 
     @abstractmethod
     def fit(self, X: ArrayLike, y: ArrayLike) -> "SupervisedLearningModel":
@@ -23,8 +23,9 @@ class SupervisedLearningModel(LearningModel):
         raise NotImplementedError("Must be implemented")
 
     def _validate_y(self, y: ArrayLike) -> NDArray:
-        y_arr: NDArray = np.asarray(y)
-        unseen: NDArray = np.setdiff1d(np.unique(y_arr), self._classes)
+        y_arr = np.asarray(y)
+        unseen= np.setdiff1d(np.unique(y_arr), self._classes)
+
         if len(unseen) > 0:
             raise ValueError(
                 f"y contains classes not declared at init: {unseen.tolist()}. "
