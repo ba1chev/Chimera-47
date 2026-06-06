@@ -33,11 +33,6 @@ class TestMacroF1Metric:
 
     def test_class_with_zero_precision_and_zero_recall_contributes_zero(self):
         metric = MacroF1Metric()
-        # class C predicted but never actually present and class B never predicted
         y_true = np.array(["a", "b"])
         y_predicted = np.array(["a", "c"])
-        # A: TP=1, FP=0, FN=0 → P=R=F1=1
-        # B: TP=0, FP=0, FN=1 → P=0, R=0, F1=0
-        # C: TP=0, FP=1, FN=0 → P=0, R=0, F1=0
-        # macro = 1/3
         assert metric.evaluate(y_true, y_predicted) == pytest.approx(1.0 / 3.0)
