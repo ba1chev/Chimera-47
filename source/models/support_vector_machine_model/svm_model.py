@@ -23,12 +23,12 @@ class SVMModel(SupervisedLearningModel):
         if tolerance <= 0:
             raise ValueError(f"tolerance must be positive, got {tolerance}.")
 
-        self._binary_label_encoder: BinaryLabelEncoder = binary_label_encoder
-        self._learning_rate: float = learning_rate
-        self._max_iterations: int = max_iterations
-        self._tolerance: float = tolerance
-        self._weights: NDArray | None = None
-        self._bias: float | None = None
+        self._binary_label_encoder = binary_label_encoder
+        self._learning_rate = learning_rate
+        self._max_iterations  = max_iterations
+        self._tolerance = tolerance
+        self._weights = None
+        self._bias = None
 
     @abstractmethod
     def fit(self, X: ArrayLike, y: ArrayLike) -> "SVMModel":

@@ -17,7 +17,7 @@ class SoftMarginSVM(SVMModel):
         super().__init__(classes, binary_label_encoder, learning_rate, max_iterations, tolerance)
         if regularization_strength <= 0:
             raise ValueError(f"regularization_strength must be positive, got {regularization_strength}.")
-        self._regularization_strength: float = regularization_strength
+        self._regularization_strength  = regularization_strength
 
     def fit(self, X: ArrayLike, y: ArrayLike) -> "SoftMarginSVM":
         X_arr = np.asarray(X, dtype=np.float64)
