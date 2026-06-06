@@ -11,7 +11,7 @@ class FiniteDifferenceDerivativeCalculator(DerivativeCalculator):
     def __init__(self, epsilon: float = 1e-6) -> None:
         if epsilon <= 0:
             raise ValueError(f"epsilon must be positive, got {epsilon}.")
-        self._epsilon: float = epsilon
+        self._epsilon = epsilon
 
     def calculate_derivative_at(self, function: Function, parameters: NDArray) -> NDArray:
         parameters_float = np.asarray(parameters, dtype=np.float64)

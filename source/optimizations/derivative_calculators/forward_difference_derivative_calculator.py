@@ -11,18 +11,18 @@ class ForwardDifferenceDerivativeCalculator(DerivativeCalculator):
     def __init__(self, step_size: float = 1e-6) -> None:
         if step_size <= 0:
             raise ValueError(f"step_size must be positive, got {step_size}.")
-        self._step_size: float = step_size
+        self._step_size = step_size
 
     def calculate_derivative_at(self, function: Function, parameters: NDArray) -> NDArray:
-        parameters_float: NDArray = np.asarray(parameters, dtype=np.float64)
-        gradient: NDArray = np.empty_like(parameters_float)
+        parameters_float = np.asarray(parameters, dtype=np.float64)
+        gradient = np.empty_like(parameters_float)
 
         value_at_point: float = float(function(parameters_float))
 
         for coordinate_index in range(parameters_float.shape[0]):
-            shifted: NDArray = parameters_float.copy()
+            shifted  = parameters_float.copy()
             shifted[coordinate_index] += self._step_size
-            value_shifted: float = float(function(shifted))
+            value_shifted  = float(function(shifted))
             gradient[coordinate_index] = (value_shifted - value_at_point) / self._step_size
 
         return gradient
