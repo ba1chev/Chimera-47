@@ -12,12 +12,12 @@ class StratifiedSplitter(DataSplitter):
     def __init__(self, test_size: float = 0.2, random_state: int = 47) -> None:
         if not 0.0 < test_size < 1.0:
             raise ValueError(f"test_size must be in (0, 1), got {test_size}.")
-        self._test_size: float = test_size
-        self._random_state: int = random_state
+        self._test_size = test_size
+        self._random_state = random_state
 
     def split(self, X: ArrayLike, y: ArrayLike) -> DataSplit:
-        X_arr: NDArray = np.asarray(X)
-        y_arr: NDArray = np.asarray(y)
+        X_arr = np.asarray(X)
+        y_arr = np.asarray(y)
         if X_arr.shape[0] != y_arr.shape[0]:
             raise ValueError(
                 f"X and y length mismatch: {X_arr.shape[0]} vs {y_arr.shape[0]}."

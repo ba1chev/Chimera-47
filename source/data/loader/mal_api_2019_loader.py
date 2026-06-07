@@ -13,13 +13,13 @@ class MalApi2019Loader(DatasetLoader):
     LABELS_FILENAME: str = "labels.csv"
 
     def __init__(self, data_dir: str) -> None:
-        self._data_dir: Path = Path(data_dir)
+        self._data_dir = Path(data_dir)
         if not self._data_dir.is_dir():
             raise FileNotFoundError(f"Data directory does not exist: {self._data_dir}")
 
     def load(self) -> Dataset:
-        samples: NDArray = self._load_samples()
-        raw_labels: NDArray = self._load_raw_labels()
+        samples = self._load_samples()
+        raw_labels = self._load_raw_labels()
 
         if samples.shape[0] != raw_labels.shape[0]:
             raise ValueError(
@@ -30,7 +30,7 @@ class MalApi2019Loader(DatasetLoader):
         return Dataset(samples=samples, labels=labels, label_names=label_names)
 
     def _load_samples(self) -> NDArray:
-        path: Path = self._data_dir / self.SAMPLES_FILENAME
+        path = self._data_dir / self.SAMPLES_FILENAME
         if not path.is_file():
             raise FileNotFoundError(f"Samples file not found: {path}")
 
@@ -39,7 +39,7 @@ class MalApi2019Loader(DatasetLoader):
         return np.asarray(lines, dtype=object)
 
     def _load_raw_labels(self) -> NDArray:
-        path: Path = self._data_dir / self.LABELS_FILENAME
+        path = self._data_dir / self.LABELS_FILENAME
         if not path.is_file():
             raise FileNotFoundError(f"Labels file not found: {path}")
 
