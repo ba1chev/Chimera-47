@@ -20,6 +20,46 @@ All three consume the exact same stratified 80/20 split (seed `47`) and are tune
 
 The Markov classifier is kept in the comparison even though it loses — that's the scientific finding. First-order transitions are too local to capture family-level structure once TF-IDF has already done most of the heavy lifting for the linear models.
 
+## How the pipeline works
+
+All three models share one identical protocol — same split, same CV folds, same metric — so the head-to-head numbers are apples-to-apples.
+
+```
+  raw .txt + .csv
+        │
+        ▼
+  Dataset (7,107 traces, int labels)
+        │
+        ▼
+  Stratified 80/20 split  (seed 47)
+   ├─► X_train/y_train (5,685)
+   └─► X_test/y_test   (1,422)  ← locked until step 7
+        │
+        ▼
+  TF-IDF fit on train, transform test    [SVM + MNLR]
+  raw token sequences                     [Markov]
+        │
+        ▼
+  5-fold stratified CV on train
+  grid: C ∈ {.01,.1,.5,1,2,5,10}  /  α ∈ {.001,.01,.1,1,10}
+        │
+        ▼
+  Refit best hyperparam on full train
+        │
+        ▼
+  Predict on test → macro-F1 + confusion matrix
+        │
+        ▼
+  Side-by-side comparison
+```
+
+- **Provision** → `.data/` cache (download + unzip on first run)
+- **Load** → integer-encode labels via `np.unique`
+- **Split** → stratified, locked test set
+- **Vectorise** → TF-IDF (5000 features) for linear models; raw text for Markov
+- **CV grid** → 5 folds × 7 C values = 35 OvO fits per sweep
+- **Refit + evaluate** → honest test-set macro-F1
+
 ## Directory tree
 
 ```
