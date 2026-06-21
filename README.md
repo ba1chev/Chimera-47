@@ -69,6 +69,7 @@ Chimera-47/
 │   └── 01_experiment.ipynb         # End-to-end pipeline + 3-model comparison on MAL-API-2019
 ├── source/
 │   ├── __init__.py
+│   ├── constants.py                # Centralised default literals (seeds, splits, optimisation knobs)
 │   ├── data/
 │   │   ├── __init__.py
 │   │   ├── api_fetcher/            # Download + unzip MAL-API-2019 from the upstream repo
