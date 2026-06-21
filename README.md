@@ -68,26 +68,33 @@ Chimera-47/
 │   ├── 00_theoretical.ipynb        # Math derivations: SVM dual, OvO voting, MNLR softmax, Markov likelihood
 │   └── 01_experiment.ipynb         # End-to-end pipeline + 3-model comparison on MAL-API-2019
 ├── source/
+│   ├── __init__.py
 │   ├── data/
+│   │   ├── __init__.py
 │   │   ├── api_fetcher/            # Download + unzip MAL-API-2019 from the upstream repo
+│   │   │   ├── __init__.py
 │   │   │   ├── api_fetcher.py
 │   │   │   ├── http_api_fetcher.py
 │   │   │   ├── archive_extractor.py
 │   │   │   ├── zip_archive_extractor.py
 │   │   │   └── mal_api_2019_provisioner.py
 │   │   ├── loader/                 # Parse the raw corpus into a Dataset (X, y)
+│   │   │   ├── __init__.py
 │   │   │   ├── dataset.py
 │   │   │   ├── dataset_loader.py
 │   │   │   └── mal_api_2019_loader.py
 │   │   ├── normalization/          # Feature scaling: standardization and TF-IDF
+│   │   │   ├── __init__.py
 │   │   │   ├── normalizer.py
 │   │   │   ├── standard_normalizer.py
 │   │   │   └── tfidf_normalizer.py
 │   │   ├── encoders/               # Label encoding: binary and one-hot
+│   │   │   ├── __init__.py
 │   │   │   ├── encoder.py
 │   │   │   ├── binary_label_encoder.py
 │   │   │   └── one_hot_encoder.py
 │   │   ├── chunking/               # Train/test split + stratified K-fold CV
+│   │   │   ├── __init__.py
 │   │   │   ├── data_splitter.py
 │   │   │   ├── data_split.py
 │   │   │   ├── stratified_splitter.py
@@ -97,19 +104,25 @@ Chimera-47/
 │   │   ├── data_pipeline.py        # Glue: fetch → load → encode → normalize → split
 │   │   └── data_pipeline_result.py
 │   ├── models/
+│   │   ├── __init__.py
 │   │   ├── learning_model.py                  # Abstract base class
 │   │   ├── supervised_learning_model.py
 │   │   ├── support_vector_machine_model/      # Linear SVM (hard + soft margin)
+│   │   │   ├── __init__.py
 │   │   │   ├── svm_model.py
 │   │   │   ├── hard_margin_svm.py
 │   │   │   └── soft_margin_svm.py
 │   │   ├── one_vs_one_classifier/             # 28-SVM ensemble for 8-class problem
+│   │   │   ├── __init__.py
 │   │   │   └── one_vs_one_classifier.py
 │   │   ├── logistic_regression/               # Multinomial Logistic Regression
+│   │   │   ├── __init__.py
 │   │   │   └── multinomial_logistic_regression.py
 │   │   └── markov_chain/                      # Per-class first-order Markov chain
+│   │       ├── __init__.py
 │   │       └── markov_chain_classifier.py
 │   └── evaluations/                # Metrics: accuracy, macro P/R/F1, confusion matrix
+│       ├── __init__.py
 │       ├── metric.py
 │       ├── per_class_metric.py
 │       ├── accuracy_metric.py
