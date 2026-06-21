@@ -19,6 +19,7 @@ class MalApi2019Provisioner:
     def provision(self) -> Path:
         self._data_dir.mkdir(parents=True, exist_ok=True)
 
+        # Idempotent: each artefact is only downloaded if it isn't already cached on disk.
         labels_path: Path = self._data_dir / LABELS_FILENAME
         if not labels_path.is_file():
             self._fetcher.fetch(self._labels_url, labels_path)

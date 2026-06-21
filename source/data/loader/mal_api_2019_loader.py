@@ -24,6 +24,7 @@ class MalApi2019Loader(DatasetLoader):
                 f"Samples/labels length mismatch: {samples.shape[0]} samples vs {raw_labels.shape[0]} labels."
             )
 
+        # np.unique with return_inverse gives integer-encoded labels and the canonical name table in one pass.
         label_names, labels = np.unique(raw_labels, return_inverse=True)
         return Dataset(samples=samples, labels=labels, label_names=label_names)
 

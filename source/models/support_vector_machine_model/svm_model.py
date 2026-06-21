@@ -37,6 +37,7 @@ class SVMModel(SupervisedLearningModel):
         raise NotImplementedError("Must be implemented")
 
     def predict(self, X: ArrayLike) -> NDArray:
+        # sign(w·x + b) gives the {-1, +1} side of the hyperplane; the encoder maps it back to the class label.
         scores = self.decision_function(X)
         return self._binary_label_encoder.decode(np.sign(scores))
 
@@ -44,6 +45,7 @@ class SVMModel(SupervisedLearningModel):
         if not self._is_fitted:
             raise RuntimeError("Model must be fitted before decision_function().")
         X_arr = np.asarray(X, dtype=np.float64)
+        # Signed distance to the hyperplane — magnitude is the margin, sign is the predicted side.
         return X_arr @ self._weights + self._bias
 
     @property

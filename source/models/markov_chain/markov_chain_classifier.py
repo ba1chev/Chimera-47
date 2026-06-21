@@ -31,6 +31,7 @@ class MarkovChainClassifier(SupervisedLearningModel):
         self._build_vocabulary(tokenized_sequences)
         index_sequences = [self._encode_sequence(tokens) for tokens in tokenized_sequences]
 
+        # One independent chain per class — the generative model is P(class) * P(seq | class).
         for class_label in self._classes.tolist():
             class_mask = y_arr == class_label
             class_sequences = [index_sequences[i] for i in np.where(class_mask)[0]]
@@ -45,6 +46,7 @@ class MarkovChainClassifier(SupervisedLearningModel):
 
         X_arr = np.asarray(X, dtype=object)
         scores = self._score(X_arr)
+        # argmax over class log-likelihoods — equivalent to MAP with a uniform class prior.
         winning_indices = scores.argmax(axis=1)
         return self._classes[winning_indices]
 
@@ -79,15 +81,19 @@ class MarkovChainClassifier(SupervisedLearningModel):
 
         initial_log = self._initial_log_probabilities[class_label][indices[0]]
         if indices.shape[0] == 1:
+            # Single-token sequence has no transitions — only the initial probability contributes.
             return float(initial_log)
 
+        # log P(seq) = log P(x_0) + sum_t log P(x_t | x_{t-1}) — the chain factorisation in log space.
         transition_log = self._transition_log_probabilities[class_label]
         from_indices = indices[:-1]
         to_indices = indices[1:]
+        # Vectorised lookup: gathers log P(x_t | x_{t-1}) for every consecutive (from, to) pair.
         transition_sum = float(transition_log[from_indices, to_indices].sum())
         return float(initial_log) + transition_sum
 
     def _fit_single_chain(self, class_label, sequences: List[NDArray]) -> None:
+        # +1 for the reserved UNKNOWN_TOKEN_INDEX slot at index 0.
         vocabulary_with_unk = self._vocabulary_size + 1
 
         initial_counts = np.zeros(vocabulary_with_unk, dtype=np.float64)
@@ -100,13 +106,16 @@ class MarkovChainClassifier(SupervisedLearningModel):
             if indices.shape[0] > 1:
                 from_indices = indices[:-1]
                 to_indices = indices[1:]
+                # np.add.at supports unbuffered increments — needed when the same (from, to) pair appears twice.
                 np.add.at(transition_counts, (from_indices, to_indices), 1.0)
 
+        # Laplace smoothing: add alpha to every count so unseen events get non-zero probability.
         smoothed_initial = initial_counts + self._smoothing_alpha
         initial_probabilities = smoothed_initial / smoothed_initial.sum()
         self._initial_log_probabilities[class_label] = np.log(initial_probabilities)
 
         smoothed_transitions = transition_counts + self._smoothing_alpha
+        # Row-wise normalisation: each row must sum to 1 since it is a conditional distribution P(x_t | x_{t-1}).
         row_sums = smoothed_transitions.sum(axis=1, keepdims=True)
         transition_probabilities = smoothed_transitions / row_sums
         self._transition_log_probabilities[class_label] = np.log(transition_probabilities)
@@ -116,6 +125,7 @@ class MarkovChainClassifier(SupervisedLearningModel):
         for tokens in tokenized_sequences:
             unique_tokens.update(tokens)
         sorted_tokens = sorted(unique_tokens)
+        # Indices start at 1 because index 0 is reserved for UNKNOWN_TOKEN_INDEX.
         self._token_to_index = {token: index + 1 for index, token in enumerate(sorted_tokens)}
         self._vocabulary_size = len(sorted_tokens)
 

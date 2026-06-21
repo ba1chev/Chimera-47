@@ -31,6 +31,7 @@ class ConfusionMatrix:
 
         count_of_classes = self._classes.shape[0]
         matrix = np.zeros((count_of_classes, count_of_classes), dtype=np.int64)
+        # Diagonal entries are correct predictions; off-diagonal cells reveal which classes get confused.
         for true_label, predicted_label in zip(y_true_arr.tolist(), y_predicted_arr.tolist()):
             row = self._lookup(true_label, "y_true")
             column = self._lookup(predicted_label, "y_predicted")

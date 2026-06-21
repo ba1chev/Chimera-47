@@ -19,11 +19,13 @@ class PerClassMetric(Metric):
         if y_true_arr.shape[0] == 0:
             raise ValueError("Cannot compute metric on empty arrays.")
 
+        # Use the union of true and predicted labels so spurious extra predictions still get scored.
         observed_classes = np.union1d(np.unique(y_true_arr), np.unique(y_predicted_arr))
         per_class_scores = [
             self._score_for_class(y_true_arr, y_predicted_arr, class_label)
             for class_label in observed_classes.tolist()
         ]
+        # Macro averaging: every class contributes equally regardless of support — the point of using it on imbalanced data.
         return float(np.mean(per_class_scores))
 
     def _score_for_class(self, y_true: NDArray, y_predicted: NDArray, class_label) -> float:

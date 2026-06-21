@@ -14,6 +14,8 @@ class TfidfNormalizer(Normalizer):
         super().__init__()
         self._vectorizer: TfidfVectorizer = TfidfVectorizer(
             analyzer="word",
+            # Whitespace-only tokenisation keeps full API names like "NtCreateFile" intact —
+            # the sklearn default token pattern would strip them on the capital letters.
             token_pattern=r"\S+",
             norm="l2",
             sublinear_tf=sublinear_tf,

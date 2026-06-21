@@ -32,6 +32,7 @@ class BinaryLabelEncoder(Encoder):
             )
 
         encoded = np.empty(values_arr.shape[0], dtype=np.float64)
+        # Class at index 0 is the negative side of the hyperplane, index 1 the positive side — order matters.
         encoded[values_arr == self._classes[0]] = NEGATIVE_LABEL
         encoded[values_arr == self._classes[1]] = POSITIVE_LABEL
         return encoded
@@ -42,6 +43,7 @@ class BinaryLabelEncoder(Encoder):
             raise ValueError(f"Expected 1D encoded array, got shape {tuple(encoded_arr.shape)}.")
 
         decoded = np.empty(encoded_arr.shape[0], dtype=self._classes.dtype)
+        # Threshold at zero — points on the boundary are deterministically assigned to the negative class.
         decoded[encoded_arr <= 0] = self._classes[0]
         decoded[encoded_arr > 0] = self._classes[1]
         return decoded

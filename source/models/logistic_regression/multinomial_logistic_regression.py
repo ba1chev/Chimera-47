@@ -30,6 +30,7 @@ class MultinomialLogisticRegression(SupervisedLearningModel):
 
         self._estimator = LogisticRegression(
             C=self._regularization_strength,
+            # lbfgs is sklearn's default multinomial solver — quasi-Newton, handles the full softmax natively.
             solver="lbfgs",
             tol=self._tolerance,
             max_iter=self._max_iterations,

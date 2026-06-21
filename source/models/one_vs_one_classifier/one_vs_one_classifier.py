@@ -15,6 +15,7 @@ class OneVsOneClassifier(SupervisedLearningModel):
             raise ValueError("binary_model_factory must not be None.")
 
         self._binary_model_factory = binary_model_factory
+        # Ordered (i, j) with i < j — for K classes this is exactly C(K, 2) = K*(K-1)/2 binary problems.
         self._class_pairs = [
             (i, j)
             for i in range(self.count_of_classes())
@@ -34,6 +35,7 @@ class OneVsOneClassifier(SupervisedLearningModel):
         for class_index_a, class_index_b in self._class_pairs:
             class_a = self._classes[class_index_a]
             class_b = self._classes[class_index_b]
+            # Train each binary model only on the rows belonging to its own class pair.
             pair_mask = (y_arr == class_a) | (y_arr == class_b)
             X_pair = X_arr[pair_mask]
             y_pair = y_arr[pair_mask]
@@ -61,6 +63,7 @@ class OneVsOneClassifier(SupervisedLearningModel):
             votes[pair_predictions == class_a, class_index_a] += 1
             votes[pair_predictions == self._classes[class_index_b], class_index_b] += 1
 
+            # Margin sum becomes the tiebreaker when two classes tie on vote count.
             decision_function = getattr(model, "decision_function", None)
             if decision_function is not None:
                 scores = decision_function(X_arr)
@@ -73,6 +76,7 @@ class OneVsOneClassifier(SupervisedLearningModel):
     def _resolve_winners(self, votes: NDArray, margin_sums: NDArray) -> NDArray:
         max_votes = votes.max(axis=1, keepdims=True)
         tie_mask = votes == max_votes
+        # Non-tied classes get -inf so argmax can only pick among the tied ones.
         masked_margins = np.where(tie_mask, margin_sums, -np.inf)
         return masked_margins.argmax(axis=1)
 

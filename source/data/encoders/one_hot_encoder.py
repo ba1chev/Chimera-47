@@ -31,6 +31,7 @@ class OneHotEncoder(Encoder):
 
         count_of_samples = values_arr.shape[0]
         encoded = np.zeros((count_of_samples, self.count_of_classes), dtype=np.float64)
+        # Set exactly one column per row to 1 — the column index matches the class's position in self._classes.
         for class_index, class_label in enumerate(self._classes):
             encoded[values_arr == class_label, class_index] = 1.0
         return encoded
@@ -42,5 +43,6 @@ class OneHotEncoder(Encoder):
                 f"Expected encoded shape (n_samples, {self.count_of_classes}), "
                 f"got {tuple(encoded_arr.shape)}."
             )
+        # argmax also handles soft probability rows, not just hard one-hot vectors — useful for decoding predict_proba output.
         winning_indices = np.argmax(encoded_arr, axis=1)
         return self._classes[winning_indices]

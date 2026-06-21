@@ -20,9 +20,11 @@ class DataPipeline:
     def run(self) -> DataPipelineResult:
         self._provisioner.provision()
         dataset = self._loader.load()
+        # Split before normalisation so the test set never participates in fitting the vectoriser.
         raw_split = self._splitter.split(dataset.samples, dataset.labels)
         X_train = self._normalizer.fit_transform(raw_split.X_train)
         X_test = self._normalizer.transform(raw_split.X_test)
+        # CV folds are carved out of the already-normalised training set — the test split stays locked.
         folds = self._k_fold_splitter.split(X_train, raw_split.y_train)
 
         return DataPipelineResult(

@@ -28,6 +28,7 @@ class StratifiedSplitter(DataSplitter):
             X_arr, y_arr,
             test_size=self._test_size,
             random_state=self._random_state,
+            # stratify=y_arr keeps the per-class proportion identical in train and test — critical on imbalanced labels.
             stratify=y_arr,
             shuffle=True
         )

@@ -26,6 +26,7 @@ class SoftMarginSVM(SVMModel):
     def fit(self, X: ArrayLike, y: ArrayLike) -> "SoftMarginSVM":
         X_arr = np.asarray(X, dtype=np.float64)
         y_arr = self._validate_y(y)
+        # LinearSVC needs labels in {-1, +1}; the encoder maps the declared class pair to signed targets.
         y_signed = self._binary_label_encoder.encode(y_arr)
 
         estimator = LinearSVC(

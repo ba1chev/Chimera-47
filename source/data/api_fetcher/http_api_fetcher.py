@@ -19,6 +19,7 @@ class HttpApiFetcher(ApiFetcher):
     def fetch(self, url: str, destination: Path) -> Path:
         destination.parent.mkdir(parents=True, exist_ok=True)
 
+        # Stream chunk-by-chunk so the dataset archive never has to fit fully in memory.
         with requests.get(url, stream=True, timeout=self._timeout_seconds) as response:
             response.raise_for_status()
             with destination.open("wb") as file_handle:
