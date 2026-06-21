@@ -2,12 +2,13 @@ import requests
 from pathlib import Path
 
 from source.data.api_fetcher.api_fetcher import ApiFetcher
+from source.constants import DEFAULT_CHUNK_SIZE, DEFAULT_TIMEOUT_SECONDS
 
 
 class HttpApiFetcher(ApiFetcher):
     """Streams a remote file to disk over HTTP(S) using requests."""
 
-    def __init__(self, chunk_size: int = 1 << 16, timeout_seconds: int = 60) -> None:
+    def __init__(self, chunk_size: int = DEFAULT_CHUNK_SIZE, timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS) -> None:
         if chunk_size <= 0:
             raise ValueError(f"chunk_size must be positive, got {chunk_size}.")
         if timeout_seconds <= 0:

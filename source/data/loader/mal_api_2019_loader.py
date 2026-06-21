@@ -4,13 +4,11 @@ from numpy.typing import NDArray
 
 from source.data.loader.dataset import Dataset
 from source.data.loader.dataset_loader import DatasetLoader
+from source.constants import SAMPLES_FILENAME, LABELS_FILENAME
 
 
 class MalApi2019Loader(DatasetLoader):
     """Loads the Mal-API-2019 dataset (7107 Windows API call traces, 8 malware families)."""
-
-    SAMPLES_FILENAME: str = "all_analysis_data.txt"
-    LABELS_FILENAME: str = "labels.csv"
 
     def __init__(self, data_dir: str) -> None:
         self._data_dir = Path(data_dir)
@@ -30,7 +28,7 @@ class MalApi2019Loader(DatasetLoader):
         return Dataset(samples=samples, labels=labels, label_names=label_names)
 
     def _load_samples(self) -> NDArray:
-        path = self._data_dir / self.SAMPLES_FILENAME
+        path = self._data_dir / SAMPLES_FILENAME
         if not path.is_file():
             raise FileNotFoundError(f"Samples file not found: {path}")
 
@@ -39,7 +37,7 @@ class MalApi2019Loader(DatasetLoader):
         return np.asarray(lines, dtype=object)
 
     def _load_raw_labels(self) -> NDArray:
-        path = self._data_dir / self.LABELS_FILENAME
+        path = self._data_dir / LABELS_FILENAME
         if not path.is_file():
             raise FileNotFoundError(f"Labels file not found: {path}")
 

@@ -3,13 +3,14 @@ from numpy.typing import ArrayLike, NDArray
 from sklearn.linear_model import LogisticRegression
 
 from source.models.supervised_learning_model import SupervisedLearningModel
+from source.constants import DEFAULT_REGULARIZATION_STRENGTH, DEFAULT_MAX_ITERATIONS, DEFAULT_TOLERANCE
 
 
 class MultinomialLogisticRegression(SupervisedLearningModel):
     """Native multi-class linear classifier. Wraps sklearn LogisticRegression with the lbfgs solver."""
 
-    def __init__(self, classes: ArrayLike, regularization_strength: float = 1.0,
-        max_iterations: int = 2000, tolerance: float = 1e-6) -> None:
+    def __init__(self, classes: ArrayLike, regularization_strength: float = DEFAULT_REGULARIZATION_STRENGTH,
+        max_iterations: int = DEFAULT_MAX_ITERATIONS, tolerance: float = DEFAULT_TOLERANCE) -> None:
         super().__init__(classes)
         if regularization_strength <= 0:
             raise ValueError(f"regularization_strength must be positive, got {regularization_strength}.")

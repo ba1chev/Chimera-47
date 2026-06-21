@@ -1,15 +1,16 @@
 import numpy as np
-from numpy.typing import ArrayLike, NDArray
+from numpy.typing import ArrayLike
 from sklearn.model_selection import train_test_split
 
 from source.data.chunking.data_split import DataSplit
 from source.data.chunking.data_splitter import DataSplitter
+from source.constants import DEFAULT_TEST_SIZE, DEFAULT_RANDOM_STATE
 
 
 class StratifiedSplitter(DataSplitter):
     """Stratified train/test split: preserves the per-class proportion. Wraps sklearn train_test_split."""
 
-    def __init__(self, test_size: float = 0.2, random_state: int = 47) -> None:
+    def __init__(self, test_size: float = DEFAULT_TEST_SIZE, random_state: int = DEFAULT_RANDOM_STATE) -> None:
         if not 0.0 < test_size < 1.0:
             raise ValueError(f"test_size must be in (0, 1), got {test_size}.")
         self._test_size = test_size

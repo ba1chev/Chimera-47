@@ -2,13 +2,11 @@ import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
 from source.data.encoders.encoder import Encoder
+from source.constants import NEGATIVE_LABEL, POSITIVE_LABEL
 
 
 class BinaryLabelEncoder(Encoder):
     """Maps a fixed pair of class labels to {-1, +1} for binary SVM training."""
-
-    NEGATIVE_LABEL: float = -1.0
-    POSITIVE_LABEL: float = 1.0
 
     def __init__(self, classes: ArrayLike) -> None:
         classes_arr = np.asarray(classes)
@@ -34,8 +32,8 @@ class BinaryLabelEncoder(Encoder):
             )
 
         encoded = np.empty(values_arr.shape[0], dtype=np.float64)
-        encoded[values_arr == self._classes[0]] = self.NEGATIVE_LABEL
-        encoded[values_arr == self._classes[1]] = self.POSITIVE_LABEL
+        encoded[values_arr == self._classes[0]] = NEGATIVE_LABEL
+        encoded[values_arr == self._classes[1]] = POSITIVE_LABEL
         return encoded
 
     def decode(self, encoded: ArrayLike) -> NDArray:

@@ -3,14 +3,13 @@ from typing import Dict, List
 from numpy.typing import ArrayLike, NDArray
 
 from source.models.supervised_learning_model import SupervisedLearningModel
+from source.constants import UNKNOWN_TOKEN_INDEX, DEFAULT_SMOOTHING_ALPHA
 
 
 class MarkovChainClassifier(SupervisedLearningModel):
     """Generative classifier — fits one first-order Markov chain per class over API token sequences."""
 
-    UNKNOWN_TOKEN_INDEX: int = 0
-
-    def __init__(self, classes: ArrayLike, smoothing_alpha: float = 1.0) -> None:
+    def __init__(self, classes: ArrayLike, smoothing_alpha: float = DEFAULT_SMOOTHING_ALPHA) -> None:
         super().__init__(classes)
         if smoothing_alpha <= 0:
             raise ValueError(f"smoothing_alpha must be positive, got {smoothing_alpha}.")
@@ -123,7 +122,7 @@ class MarkovChainClassifier(SupervisedLearningModel):
     def _encode_sequence(self, tokens: List[str]) -> NDArray:
         if not tokens:
             return np.empty(0, dtype=np.int64)
-        indices = [self._token_to_index.get(token, self.UNKNOWN_TOKEN_INDEX) for token in tokens]
+        indices = [self._token_to_index.get(token, UNKNOWN_TOKEN_INDEX) for token in tokens]
         return np.asarray(indices, dtype=np.int64)
 
     @staticmethod

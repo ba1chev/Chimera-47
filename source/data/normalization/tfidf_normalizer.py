@@ -3,13 +3,14 @@ from numpy.typing import ArrayLike, NDArray
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from source.data.normalization.normalizer import Normalizer
+from source.constants import DEFAULT_MAX_FEATURES, DEFAULT_NGRAM_RANGE, DEFAULT_SUBLINEAR_TF
 
 
 class TfidfNormalizer(Normalizer):
     """TF-IDF + L2 normalization for API call traces."""
 
-    def __init__(self, max_features: int = 5000,
-        ngram_range: Tuple[int, int] = (1, 1), sublinear_tf: bool = True) -> None:
+    def __init__(self, max_features: int = DEFAULT_MAX_FEATURES,
+        ngram_range: Tuple[int, int] = DEFAULT_NGRAM_RANGE, sublinear_tf: bool = DEFAULT_SUBLINEAR_TF) -> None:
         super().__init__()
         self._vectorizer: TfidfVectorizer = TfidfVectorizer(
             analyzer="word",

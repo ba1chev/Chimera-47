@@ -2,6 +2,7 @@ import numpy as np
 from abc import abstractmethod
 from numpy.typing import ArrayLike, NDArray
 
+from source.constants import DEFAULT_SVM_LEARNING_RATE, DEFAULT_MAX_ITERATIONS, DEFAULT_TOLERANCE
 from source.data.encoders.binary_label_encoder import BinaryLabelEncoder
 from source.models.supervised_learning_model import SupervisedLearningModel
 
@@ -10,7 +11,8 @@ class SVMModel(SupervisedLearningModel):
     """Abstract linear binary SVM. Subclasses define how the weight vector and bias are fit."""
 
     def __init__(self, classes: ArrayLike, binary_label_encoder: BinaryLabelEncoder,
-        learning_rate: float = 0.01, max_iterations: int = 2000, tolerance: float = 1e-6) -> None:
+        learning_rate: float = DEFAULT_SVM_LEARNING_RATE, max_iterations: int = DEFAULT_MAX_ITERATIONS,
+        tolerance: float = DEFAULT_TOLERANCE) -> None:
         super().__init__(classes)
         if self.count_of_classes() != 2:
             raise ValueError(f"SVMModel requires exactly 2 classes, got {self.count_of_classes()}.")

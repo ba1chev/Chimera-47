@@ -2,14 +2,11 @@ from pathlib import Path
 
 from source.data.api_fetcher.api_fetcher import ApiFetcher
 from source.data.api_fetcher.archive_extractor import ArchiveExtractor
+from source.constants import SAMPLES_FILENAME, LABELS_FILENAME, ARCHIVE_FILENAME
 
 
 class MalApi2019Provisioner:
     """Ensures the Mal-API-2019 dataset is present on disk: downloads, extracts, caches."""
-
-    SAMPLES_FILENAME: str = "all_analysis_data.txt"
-    LABELS_FILENAME: str = "labels.csv"
-    ARCHIVE_FILENAME: str = "mal-api-2019.zip"
 
     def __init__(self, data_dir: str, samples_archive_url: str, labels_url: str,
         fetcher: ApiFetcher, extractor: ArchiveExtractor) -> None:
@@ -22,13 +19,13 @@ class MalApi2019Provisioner:
     def provision(self) -> Path:
         self._data_dir.mkdir(parents=True, exist_ok=True)
 
-        labels_path: Path = self._data_dir / self.LABELS_FILENAME
+        labels_path: Path = self._data_dir / LABELS_FILENAME
         if not labels_path.is_file():
             self._fetcher.fetch(self._labels_url, labels_path)
 
-        samples_path: Path = self._data_dir / self.SAMPLES_FILENAME
+        samples_path: Path = self._data_dir / SAMPLES_FILENAME
         if not samples_path.is_file():
-            archive_path: Path = self._data_dir / self.ARCHIVE_FILENAME
+            archive_path: Path = self._data_dir / ARCHIVE_FILENAME
             if not archive_path.is_file():
                 self._fetcher.fetch(self._samples_archive_url, archive_path)
             self._extractor.extract(archive_path, self._data_dir)
